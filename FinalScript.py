@@ -4,16 +4,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sksurv
-from sksurv.ensemble import GradientBoostingSurvivalAnalysis
-from sksurv.ensemble.survival_loss import DummySurvivalEstimator
 import shap
-import pickle
-
-# Load the model
 model = joblib.load("gbm_mod1.pkl")
 
 # Define feature names
-feature_names = ["INR","TBIL","Na","HDL","URA"]
+feature_names = ["INR", "TBIL", "Na", "HDL", "URA"]
 
 # Streamlit user interface
 st.set_page_config(
@@ -23,7 +18,7 @@ st.set_page_config(
 )
 
 st.title("HEV-ACLF Risk Predictor")
-st.caption('This online tool was developed to predict the risk of hepatitis E virus-related acute-on-chronic liver failure among hospitalized patients with acute hepatitis E')
+st.caption('This online tool was developed to predict the risk of hepatitis E virus-related acute-on-chronic liver failure among hospitalized patients with HEV infection')
 
 # Customizing the appearance of the input form using streamlit's markdown styling
 st.markdown("""
@@ -38,22 +33,21 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 # Numerical input
-"INR","TBIL","Na","HDL","URA"
 INR1 = st.number_input("International normalized ratio", min_value=0.0, max_value=100.0, format="%.2f", key="NEU")
 TBIL1 = st.number_input("Total bilirubin (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="MONO")
 Na1 = st.number_input("Na (mmol/L)", min_value=0.0, max_value=1000.0, format="%.2f", key="INR")
 HDL1 = st.number_input("High-density lipoprotein-cholesterol (mmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="AST")
 URA1 = st.number_input("Uric acid (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="ALB")
 
-INR= (INR1-1.245)/0.362144
-TBIL=(TBIL1-127.8)/123.9332
-Na=(Na1-138.8)/3.736281
-HDL=(HDL1-0.7207)/0.4138742
-URA=(URA1-279.6)/118.7426
+# Z-score transformation (standardization)
+INR = (INR1 - 1.245) / 0.362144
+TBIL = (TBIL1 - 127.8) / 123.9332
+Na = (Na1 - 138.8) / 3.736281
+HDL = (HDL1 - 0.7207) / 0.4138742
+URA = (URA1 - 279.6) / 118.7426
 
-feature_values = [INR, TBIL,Na,HDL,URA]
+feature_values = [INR, TBIL, Na, HDL, URA]
 features = np.array([feature_values])
 
 # Center the predict button
@@ -66,12 +60,13 @@ st.markdown("""
     </style>""", unsafe_allow_html=True)
 
 # Predict button
-if st.button("Predict"):    
+if st.button("Predict"):
     # Predict risk score
     risk_score = model.predict(features)[0]
-# Get the cumulative hazard function for each individual (hazard function)
+
+    # Get the cumulative hazard function for each individual (hazard function)
     hazard_functions = model.predict_cumulative_hazard_function(features)
-    
+
     # Calculate the death probabilities at 7, 14, and 28 days
     death_probabilities = []
     for hazard in hazard_functions:
@@ -97,23 +92,23 @@ if st.button("Predict"):
 
     # Display HEV-ACLF onset risk based on threshold
     if risk_score >= 0.4458827:
-        st.markdown("<h3 style='text-align: center; color: red;'>7 day HEV-ACLF probability {death_probabilities[0][0]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: red;'>7 day HEV-ACLF probability: {death_probabilities[0][0]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
     else:
-        st.markdown("<h3 style='text-align: center; color: green;'>7 day HEV-ACLF probability {death_probabilities[0][0]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: green;'>7 day HEV-ACLF probability: {death_probabilities[0][0]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
 
     if risk_score >= 0.4458827:
-        st.markdown("<h3 style='text-align: center; color: red;'>14 day HEV-ACLF probability {death_probabilities[0][1]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: red;'>14 day HEV-ACLF probability: {death_probabilities[0][1]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
     else:
-        st.markdown("<h3 style='text-align: center; color: green;'>14 day HEV-ACLF probability {death_probabilities[0][1]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: green;'>14 day HEV-ACLF probability: {death_probabilities[0][1]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
 
     if risk_score >= 0.3980038:
-        st.markdown("<h3 style='text-align: center; color: red;'>28 day HEV-ACLF probability {death_probabilities[0][3]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: red;'>28 day HEV-ACLF probability: {death_probabilities[0][2]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
     else:
-        st.markdown("<h3 style='text-align: center; color: green;'>28 day HEV-ACLF probability {death_probabilities[0][3]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: green;'>28 day HEV-ACLF probability: {death_probabilities[0][2]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
     
     st.markdown("<h3 style='font-weight: bold;'>Prediction Interpretations</h3>", unsafe_allow_html=True)
-    st.caption('The explanations for this prediction is shown below. Please note the prediction results should be interpreted by medical professionals only.')
-    
+    st.caption('The explanations for this prediction are shown below. Please note the prediction results should be interpreted by medical professionals only.')
+
     # Compute SHAP values
     explainer = joblib.load('shap_explainer.pkl')
     shap_values = explainer(features)
@@ -121,10 +116,10 @@ if st.button("Predict"):
     # Create a figure for the SHAP force plot
     features_df = pd.DataFrame([feature_values], columns=feature_names)
     shap.plots.force(shap_values.base_values,
-                 shap_values.values[0],
-                 pd.DataFrame([features_df.iloc[0].values], columns=features_df.columns),matplotlib=True)
+                     shap_values.values[0],
+                     pd.DataFrame([features_df.iloc[0].values], columns=features_df.columns), matplotlib=True)
     plt.savefig("shap_force_plot.png", bbox_inches='tight', dpi=1200)
     st.image("shap_force_plot.png")
 
-st.caption('Version: 20241223[This is currently a demo version for review]')
+st.caption('Version: 20241223 [This is currently a demo version for review]')
 st.caption('Contact: wangjienjmu@126.com')
