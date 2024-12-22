@@ -1,0 +1,11 @@
+joblib>=1.2.0
+streamlit
+streamlit_lottie
+matplotlib
+numpy>=1.23.0
+pandas>=2.2.2
+seaborn>=0.13.2
+scikit-learn
+scikit-survival==0.22.2
+IPython
+shap
