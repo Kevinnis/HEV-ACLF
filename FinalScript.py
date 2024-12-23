@@ -8,7 +8,7 @@ import shap
 model = joblib.load("gbm_mod1.pkl")
 
 # Define feature names
-feature_names = ["INR", "TBIL", "Na", "HDL", "URA"]
+feature_names = ["INR", "TBIL", "Na", "HDL-C", "URA"]
 
 # Streamlit user interface
 st.set_page_config(
@@ -34,18 +34,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Numerical input
-INR1 = st.number_input("International normalized ratio", min_value=0.0, max_value=100.0, format="%.2f", key="NEU")
-TBIL1 = st.number_input("Total bilirubin (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="MONO")
-Na1 = st.number_input("Na (mmol/L)", min_value=0.0, max_value=1000.0, format="%.2f", key="INR")
-HDL1 = st.number_input("High-density lipoprotein-cholesterol (mmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="AST")
-URA1 = st.number_input("Uric acid (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="ALB")
+INR = st.number_input("International normalized ratio (INR)", min_value=0.0, max_value=100.0, format="%.2f", key="NEU")
+TBIL = st.number_input("Total bilirubin (TBIL) (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="MONO")
+Na = st.number_input("Na (mmol/L)", min_value=0.0, max_value=1000.0, format="%.2f", key="INR")
+HDL = st.number_input("High-density lipoprotein-cholesterol (HDL-C) (mmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="AST")
+URA = st.number_input("Uric acid (URA) (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="ALB")
 
 # Z-score transformation (standardization)
-INR = (INR1 - 1.244769) / 0.362144
-TBIL = (TBIL1 - 127.8267) / 123.9332
-Na = (Na1 - 138.7888) / 3.736281
-HDL = (HDL1 - 0.7207303) / 0.4138742
-URA = (URA1 - 279.6014) / 118.7426
+INR = (INR - 1.244769) / 0.362144
+TBIL = (TBIL - 127.8267) / 123.9332
+Na = (Na - 138.7888) / 3.736281
+HDL = (HDL - 0.7207303) / 0.4138742
+URA = (URA - 279.6014) / 118.7426
 
 feature_values = [INR, TBIL, Na, HDL, URA]
 features = np.array([feature_values])
