@@ -41,11 +41,11 @@ HDL1 = st.number_input("High-density lipoprotein-cholesterol (mmol/L)", min_valu
 URA1 = st.number_input("Uric acid (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="ALB")
 
 # Z-score transformation (standardization)
-INR = (INR1 - 1.245) / 0.362144
-TBIL = (TBIL1 - 127.8) / 123.9332
-Na = (Na1 - 138.8) / 3.736281
-HDL = (HDL1 - 0.7207) / 0.4138742
-URA = (URA1 - 279.6) / 118.7426
+INR = (INR1 - 1.244769) / 0.362144
+TBIL = (TBIL1 - 127.8267) / 123.9332
+Na = (Na1 - 138.7888) / 3.736281
+HDL = (HDL1 - 0.7207303) / 0.4138742
+URA = (URA1 - 279.6014) / 118.7426
 
 feature_values = [INR, TBIL, Na, HDL, URA]
 features = np.array([feature_values])
