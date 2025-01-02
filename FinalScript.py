@@ -97,9 +97,9 @@ if st.button("Predict"):
     else:
         st.markdown(f"<h3 style='text-align: center; color: green;'>Low Risk</h3>", unsafe_allow_html=True)
     
-    st.markdown(f"<h3 style='text-align: center; color: red;'>7 day HEV-ACLF probability: {death_probabilities[0][0]*100:.2f}% </h3>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center; color: green;'>14 day HEV-ACLF probability: {death_probabilities[0][1]*100:.2f}% </h3>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='text-align: center; color: green;'>28 day HEV-ACLF probability: {death_probabilities[0][2]*100:.2f}% </h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>7 day HEV-ACLF probability: {death_probabilities[0][0]*100:.2f}% </h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>14 day HEV-ACLF probability: {death_probabilities[0][1]*100:.2f}% </h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>28 day HEV-ACLF probability: {death_probabilities[0][2]*100:.2f}% </h3>", unsafe_allow_html=True)
     
     st.markdown("<h3 style='font-weight: bold;'>Prediction Interpretations</h3>", unsafe_allow_html=True)
     st.caption('The explanations for this prediction are shown below. Please note the prediction results should be interpreted by medical professionals only.')
