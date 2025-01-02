@@ -34,11 +34,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Numerical input
-INR = st.number_input("International normalized ratio (INR)", min_value=0.0, max_value=100.0, format="%.2f", key="NEU")
-TBIL = st.number_input("Total bilirubin (TBIL) (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="MONO")
-Na = st.number_input("Na (mmol/L)", min_value=0.0, max_value=1000.0, format="%.2f", key="INR")
-HDL = st.number_input("High-density lipoprotein-cholesterol (HDL-C) (mmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="AST")
-URA = st.number_input("Uric acid (URA) (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="ALB")
+INR = st.number_input("International normalized ratio (INR)", min_value=0.0, max_value=100.0, format="%.2f", key="INR")
+TBIL = st.number_input("Total bilirubin (TBIL) (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="TBIL")
+Na = st.number_input("Na (mmol/L)", min_value=0.0, max_value=1000.0, format="%.2f", key="Na")
+HDL = st.number_input("High-density lipoprotein-cholesterol (HDL-C) (mmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="HDL")
+URA = st.number_input("Uric acid (URA) (μmol/L)", min_value=0.0, max_value=10000.0, format="%.2f", key="URA")
 
 # Z-score transformation (standardization)
 INR = (INR - 1.244769) / 0.362144
@@ -88,23 +88,18 @@ if st.button("Predict"):
 
     st.markdown("<h3 style='font-weight: bold;'>Prediction Results</h3>", unsafe_allow_html=True)
     # Display Risk Score
-    st.markdown(f"<h3 style='text-align: center;'>Risk Score: {risk_score:.4f}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>Risk Score: {risk_score:.2f}</h3>", unsafe_allow_html=True)
 
     # Display HEV-ACLF onset risk based on threshold
-    if risk_score >= 0.4458827:
-        st.markdown(f"<h3 style='text-align: center; color: red;'>7 day HEV-ACLF probability: {death_probabilities[0][0]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
+    
+    if risk_score >= 0.462816:
+        st.markdown(f"<h3 style='text-align: center; color: red;'>High Risk</h3>", unsafe_allow_html=True)
     else:
-        st.markdown(f"<h3 style='text-align: center; color: green;'>7 day HEV-ACLF probability: {death_probabilities[0][0]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
-
-    if risk_score >= 0.4458827:
-        st.markdown(f"<h3 style='text-align: center; color: red;'>14 day HEV-ACLF probability: {death_probabilities[0][1]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<h3 style='text-align: center; color: green;'>14 day HEV-ACLF probability: {death_probabilities[0][1]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
-
-    if risk_score >= 0.3980038:
-        st.markdown(f"<h3 style='text-align: center; color: red;'>28 day HEV-ACLF probability: {death_probabilities[0][2]*100:.2f}% (High Risk)</h3>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<h3 style='text-align: center; color: green;'>28 day HEV-ACLF probability: {death_probabilities[0][2]*100:.2f}% (Low Risk)</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center; color: green;'>Low Risk</h3>", unsafe_allow_html=True)
+    
+    st.markdown(f"<h3 style='text-align: center; color: red;'>7 day HEV-ACLF probability: {death_probabilities[0][0]*100:.2f}% </h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: green;'>14 day HEV-ACLF probability: {death_probabilities[0][1]*100:.2f}% </h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center; color: green;'>28 day HEV-ACLF probability: {death_probabilities[0][2]*100:.2f}% </h3>", unsafe_allow_html=True)
     
     st.markdown("<h3 style='font-weight: bold;'>Prediction Interpretations</h3>", unsafe_allow_html=True)
     st.caption('The explanations for this prediction are shown below. Please note the prediction results should be interpreted by medical professionals only.')
